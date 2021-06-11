@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ThirtyGame</string>
+    <string name="reroll_button_name">Reroll</string>
+    <string name="button1_name">1</string>
+    <string name="button2_name">2</string>
+    <string name="button3_name">3</string>
+    <string name="button4_name">4</string>
+    <string name="button5_name">5</string>
+    <string name="button6_name">6</string>
 </resources>
