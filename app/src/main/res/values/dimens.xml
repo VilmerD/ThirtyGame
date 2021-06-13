@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ToggleButtonSize">90dp</dimen>
+    <dimen name="ToggleButtonTextSize">48sp</dimen>
+
+    <dimen name="SmallButtonWidth">150dp</dimen>
+    <dimen name="SmallButtonHeight">45dp</dimen>
+    <dimen name="SmallButtonTextSize">20sp</dimen>
+
+    <dimen name="ResultsTextSize">24sp</dimen>
+    <dimen name="TableTitleTextSize">22sp</dimen>
+    <dimen name="ElementTextSize">20sp</dimen>
+
+    <dimen name="ScrollViewWidth">100dp</dimen>
+</resources>
