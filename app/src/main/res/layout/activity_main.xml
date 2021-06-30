@@ -3,125 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/RerollButton"
-        android:layout_width="@dimen/SmallButtonWidth"
-        android:layout_height="@dimen/SmallButtonHeight"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="80dp"
-        android:backgroundTint="@color/purple_700"
-        android:gravity="center"
-        android:text="@string/rerollButtonDefault"
-        android:textSize="@dimen/SmallButtonTextSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    <ToggleButton
-        android:id="@+id/ToggleButton1"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/ToggleButton2"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintEnd_toStartOf="@+id/ToggleButton3"
-        app:layout_constraintStart_toEndOf="@+id/ToggleButton1"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/ToggleButton3"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/ToggleButton4"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ToggleButton1" />
-
-    <ToggleButton
-        android:id="@+id/ToggleButton5"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintEnd_toStartOf="@+id/ToggleButton6"
-        app:layout_constraintStart_toEndOf="@+id/ToggleButton4"
-        app:layout_constraintTop_toBottomOf="@+id/ToggleButton2" />
-
-    <ToggleButton
-        android:id="@+id/ToggleButton6"
-        android:layout_width="@dimen/ToggleButtonSize"
-        android:layout_height="@dimen/ToggleButtonSize"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:textOff="@string/toggleDefault"
-        android:textSize="@dimen/ToggleButtonTextSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ToggleButton3" />
-
-    <Spinner
-        android:id="@+id/Spinner"
-        android:layout_width="@dimen/ScrollViewWidth"
-        android:layout_height="@dimen/SmallButtonHeight"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="80dp"
-        android:gravity="center|start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/ResultsButton"
-        android:layout_width="@dimen/SmallButtonWidth"
-        android:layout_height="@dimen/SmallButtonHeight"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/purple_700"
-        android:text="@string/resultsButtonDefault"
-        android:textSize="@dimen/SmallButtonTextSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_navigation"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,8 @@
     <string name="resultsButtonDefault">Results</string>
     <string name="totalText">Total:</string>
     <string name="highScoreText">HS: 0</string>
+    <string name="ChoiceText">Choice</string>
+    <string name="newGameButtonText">New Game</string>
     <string-array name="scrollOptions">
         <item>Low</item>
         <item>4</item>

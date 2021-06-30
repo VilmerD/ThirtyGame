@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        tools:context=".MainActivity">
+
+        <Button
+            android:id="@+id/RerollButton"
+            style="@style/SmallButton"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/rerollButtonDefault"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton1"
+            style="@style/ToggleButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton2"
+            style="@style/ToggleButton"
+            app:layout_constraintEnd_toStartOf="@+id/ToggleButton3"
+            app:layout_constraintStart_toEndOf="@+id/ToggleButton1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton3"
+            style="@style/ToggleButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton4"
+            style="@style/ToggleButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ToggleButton1" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton5"
+            style="@style/ToggleButton"
+            app:layout_constraintEnd_toStartOf="@+id/ToggleButton6"
+            app:layout_constraintStart_toEndOf="@+id/ToggleButton4"
+            app:layout_constraintTop_toBottomOf="@+id/ToggleButton2" />
+
+        <ToggleButton
+            android:id="@+id/ToggleButton6"
+            style="@style/ToggleButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ToggleButton3" />
+
+        <Spinner
+            android:id="@+id/Spinner"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/SmallButtonHeight"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center|start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/RerollButton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

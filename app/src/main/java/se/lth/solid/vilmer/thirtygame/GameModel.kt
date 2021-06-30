@@ -1,47 +1,49 @@
 package se.lth.solid.vilmer.thirtygame
 
+import android.os.Parcelable
 import kotlin.random.Random
+import android.os.Parcel
+import android.util.Log
 
 /**
  * This class is a model of the thirty-game
- *
- * @param numberDice the number of dice used in the game, 6 is default
  */
-class GameModel(private val numberDice: Int = 6) {
-    private var dice = Array(size = numberDice) { Die() }
-    private var numberRolls: Int = 0
-    private val maxRolls: Int = 3
+class GameModel : Parcelable {
+    private val numberDice = 6
+    private var dice: Array<Die> = Array(numberDice) { Die() }
+    var choices: MutableList<Int> = mutableListOf()
+    var scores: MutableList<Int> = mutableListOf()
+    var numberRolls: Int = 0
+    var numberSets: Int = 0
+
+    private val TAG = "GameModel"
 
     /**
      * Rerolls a set of the dice
      * @param indices the indices of the dice to be rerolled
      */
-    fun reroll(indices: MutableList<Int>): MutableList<Int> {
-        if (indices.isNotEmpty() && numberRolls < maxRolls) {
-            for (i in indices) {
-                dice[i].roll()
-            }
+    fun reroll(indices: MutableList<Int>) {
+        Log.d(TAG, "In reroll")
+        if (numberRolls < 2) {
+            indices.forEach { dice[it].roll() }
             numberRolls++
         }
-        return getValues()
     }
 
     /**
      * Rerolls all dice
      */
-    fun reset(): MutableList<Int> {
-        for (i in 0 until numberDice) {
-            dice[i].roll()
-        }
+    fun reset() {
+        Log.d(TAG, "In reset")
+        dice.forEach { it.roll() }
         numberRolls = 0
-        return getValues()
     }
 
     /**
-     * Returns an array of the values of the dice
+     * Gets the values of the dice
      */
-    fun getValues(): MutableList<Int> {
-        return MutableList(numberDice) { i -> dice[i].getValue() }
+    fun getValues(): IntArray {
+        return IntArray(numberDice) { i -> dice[i].value }
     }
 
     /**
@@ -49,14 +51,21 @@ class GameModel(private val numberDice: Int = 6) {
      * @param x the sum to check against, see thirty-game rules
      */
     fun computeResults(x: Int): Int {
-        val values: MutableList<Int> = getValues()
-        return if (x > 3) {
+        Log.d(TAG, "In compute results")
+        val values = getValues().toMutableList()
+        val score = if (x > 3) {
+            // Sorting in ascending order guarantees that the most dice-efficient combinations are
+            // found
             values.sortDescending()
             values.reverse()
-            recursiveSum(s = 0, values, x)
+            findGroupsRecursively(0, values, x)
         } else {
-            values.filter{ it <= 3 }.sum()
+            values.filter { it <= 3 }.sum()
         }
+        choices.add(x)
+        scores.add(score)
+        numberSets++
+        return score
     }
 
     /**
@@ -65,17 +74,25 @@ class GameModel(private val numberDice: Int = 6) {
      * @param n the list of candidate number
      * @param x the sum to check against, see thirty-game rules
      */
-    private fun recursiveSum(s: Int, n: MutableList<Int>, x: Int): Int {
-        // "Base" cases
+    private fun findGroupsRecursively(s: Int, n: MutableList<Int>, x: Int): Int {
+        // The sum of the remaining dice.
         val nSum: Int = n.sum()
+
+        // "Base" cases
         if (s == x) {
-            return x + recursiveSum(s=0, n, x)
+            // If s sums to x, continue looking for combinations among the remaining dice
+            return x + findGroupsRecursively(0, n, x)
         } else if (n.isEmpty() || s > x || s + nSum < x) {
+            // Else, if no dice remain, or s exceeds x, or nSum + s is less than x no possible
+            // combinations can be found and the algorithm terminates
             return 0
         }
 
-        // The total number of achievable points
+        // The total number of achievable points. The result is often less than this since it is not
+        // always possible to find a pairing. It is used to check if the algorithm is done or not
         val tMax = s + nSum - (s + nSum).rem(x)
+
+        // Allocating memory
         var total = 0
         var ni: Int
         var nTemp: MutableList<Int>
@@ -84,7 +101,12 @@ class GameModel(private val numberDice: Int = 6) {
         for (i in 0..n.lastIndex) {
             nTemp = n.toMutableList()
             ni = nTemp.removeAt(i)
-            total = total.coerceAtLeast(recursiveSum(s=s + ni, nTemp, x))
+
+            // Either a better score is found at the next call of findGroupsRecursively, in which
+            // case total is updated, or the score at the next call is worse in which case total is
+            // kept as is.
+            val nextScore = findGroupsRecursively(s + ni, nTemp, x)
+            total = total.coerceAtLeast(nextScore)
 
             // If total equals the max amount of achievable points the algorithm can stop
             // prematurely
@@ -95,43 +117,52 @@ class GameModel(private val numberDice: Int = 6) {
         return total
     }
 
-    /**
-     * Sets the game state to a previous state
-     * @param values the previous values
-     * @param rolls the previous number of rolls in current set
-     */
-    fun setGameState(values: MutableList<Int>, rolls: Int) {
-        for (i in 0 until numberDice) {
-            dice[i].setValue(values[i])
-        }
-        numberRolls = rolls
+    override fun describeContents(): Int {
+        return 0
     }
 
+    override fun writeToParcel(pout: Parcel, flags: Int) {
+        Log.d(TAG, "In writeToParcel")
+        pout.writeInt(numberSets)
+        pout.writeInt(numberRolls)
+
+        dice.forEach { pout.writeInt(it.value) }
+        choices.forEach { pout.writeInt(it) }
+        scores.forEach { pout.writeInt(it) }
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<GameModel> = object : Parcelable.Creator<GameModel> {
+            override fun createFromParcel(pin: Parcel): GameModel {
+                Log.d("GameModelCreator", "In createFromParcel")
+                val gameModel = GameModel()
+                gameModel.numberSets = pin.readInt()
+                gameModel.numberRolls = pin.readInt()
+
+                gameModel.dice.forEach { it.value = pin.readInt() }
+                gameModel.choices = MutableList(gameModel.numberSets) { pin.readInt() }
+                gameModel.scores = MutableList(gameModel.numberSets) { pin.readInt() }
+                return gameModel
+            }
+
+            override fun newArray(size: Int): Array<GameModel> {
+                return Array(size) { GameModel() }
+            }
+        }
+    }
 }
 
 /**
  * A representation of a dice
- *
- * @param sides the number of sides of the die, 6 is default
  */
-class Die(private val sides: Int = 6) {
-    private var value: Int = Random.nextInt(from = 1, sides)
+class Die(v: Int = Random.nextInt(1, 7)) {
+    var value: Int = v
 
     /**
      * Rolls the die
      */
     fun roll() {
-        value = Random.nextInt(from = 1, until = sides + 1)
-    }
-
-    /**
-     * Gets the value of the dice
-     */
-    fun getValue(): Int {
-        return value
-    }
-
-    fun setValue(v: Int) {
-        value = v
+        value = Random.nextInt(1, 7)
     }
 }
