@@ -41,6 +41,8 @@ class GameFragment : Fragment() {
             onRollButton()
         }
 
+        setRollButtonState(gameViewModel.getNumberRerolls())
+
         if (gameViewModel.choices.isEmpty()) {
             gameViewModel.resetGame()
         }
@@ -51,6 +53,7 @@ class GameFragment : Fragment() {
             android.R.layout.simple_spinner_item,
             gameViewModel.choices
         )
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
