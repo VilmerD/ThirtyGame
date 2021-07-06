@@ -2,9 +2,7 @@ package se.lth.solid.vilmer.thirtygame
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ToggleButton
@@ -16,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.lth.solid.vilmer.thirtygame.databinding.FragmentGameBinding
+import android.view.Menu
 
 class GameFragment : Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
@@ -41,11 +40,11 @@ class GameFragment : Fragment() {
             onRollButton()
         }
 
-        setRollButtonState(gameViewModel.getNumberRerolls())
-
         if (gameViewModel.choices.isEmpty()) {
             gameViewModel.resetGame()
         }
+
+        setRollButtonState(gameViewModel.getNumberRerolls())
 
         val spinner = dataBinding.Spinner
         adapter = ArrayAdapter(
@@ -159,5 +158,30 @@ class GameFragment : Fragment() {
             buttons[i].textOff = "" + values[i]
             buttons[i].isChecked = false
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.reset_game -> {
+                gameViewModel.resetGame()
+                true
+            }
+            R.id.high_scores -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun save() {
+
+    }
+
+    private fun load() {
+
     }
 }
