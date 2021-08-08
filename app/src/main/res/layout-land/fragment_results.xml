@@ -3,22 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TableLayout
             android:id="@+id/scoreLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:stretchColumns="0, 2, 4"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/newGameButton"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+
+            android:layout_toStartOf="@id/buttonPanel"
+            android:layout_alignParentStart="true"
+            android:layout_margin="8dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -162,16 +164,43 @@
 
         </TableLayout>
 
-        <Button
-            style="@style/SmallButton"
-            android:id="@+id/newGameButton"
-            android:text="@string/newGameButtonText"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="vertical"
+
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="@string/name_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                style="@style/SmallButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/newGameButton"
+                android:text="@string/newGameButtonText"
+
+                android:layout_gravity="center">
+
+            </Button>
+        </LinearLayout>
+
+    </RelativeLayout>
 </layout>

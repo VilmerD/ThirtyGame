@@ -14,6 +14,9 @@
     <string name="newGameButtonText">New Game</string>
     <string name="new_game">New Game</string>
     <string name="high_scores">High Scores</string>
+    <string name="spinner_description">Spinner</string>
+    <string name="high_score_name_column">Name</string>
+    <string name="name_hint">Your Name</string>
     <string-array name="scrollOptions">
         <item>Low</item>
         <item>4</item>

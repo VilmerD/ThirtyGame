@@ -9,73 +9,108 @@
         android:background="#FFFFFF"
         tools:context=".MainActivity">
 
-        <ToggleButton
-            android:id="@+id/ToggleButton1"
-            style="@style/ToggleButton"
-            android:layout_marginStart="32dp"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ToggleButton2"
-            app:layout_constraintBottom_toBottomOf="@id/ToggleButton2"/>
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ToggleButton
-            android:id="@+id/ToggleButton2"
-            style="@style/ToggleButton"
-            app:layout_constraintBottom_toTopOf="@+id/RerollButton"
-            app:layout_constraintEnd_toEndOf="@+id/ToggleButton5"
-            app:layout_constraintStart_toStartOf="@+id/ToggleButton5"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <ToggleButton
-            android:id="@+id/ToggleButton3"
-            style="@style/ToggleButton"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintBottom_toBottomOf="@id/ToggleButton2"
-            app:layout_constraintEnd_toStartOf="@+id/Spinner"
-            app:layout_constraintTop_toTopOf="@id/ToggleButton2" />
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
 
-        <ToggleButton
-            android:id="@+id/ToggleButton4"
-            style="@style/ToggleButton"
-            android:layout_marginStart="32dp"
-            app:layout_constraintBottom_toBottomOf="@id/ToggleButton5"
-            app:layout_constraintTop_toTopOf="@id/ToggleButton5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ToggleButton1" />
+                    android:background="@color/purple_500"
+                    app:menu="@menu/main_menu"
+                    app:title="@string/app_name">
 
-        <ToggleButton
-            android:id="@+id/ToggleButton5"
-            style="@style/ToggleButton"
+                </com.google.android.material.appbar.MaterialToolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ToggleButton6"
-            app:layout_constraintStart_toEndOf="@id/ToggleButton4"
-            app:layout_constraintTop_toTopOf="@+id/RerollButton" />
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
-        <ToggleButton
-            android:id="@+id/ToggleButton6"
-            style="@style/ToggleButton"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintBottom_toBottomOf="@id/ToggleButton5"
-            app:layout_constraintEnd_toStartOf="@+id/Spinner"
-            app:layout_constraintTop_toTopOf="@id/ToggleButton5" />
+            <GridLayout
+                android:id="@+id/grid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
 
-        <Spinner
-            android:id="@+id/Spinner"
-            android:layout_width="158dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center|start"
-            app:layout_constraintEnd_toEndOf="@+id/RerollButton"
-            app:layout_constraintStart_toStartOf="@+id/RerollButton"
-            app:layout_constraintTop_toBottomOf="@+id/RerollButton" />
+                android:layout_toStartOf="@id/buttonPanel"
 
-        <Button
-            android:id="@+id/RerollButton"
-            style="@style/SmallButton"
-            android:layout_marginEnd="64dp"
-            android:text="@string/rerollButtonDefault"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:columnCount="2"
+                android:rowCount="3">
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton1"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton2"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton3"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton4"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton5"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton6"
+                    style="@style/ToggleButton"
+                    android:layout_columnWeight="1" />
+
+            </GridLayout>
+
+            <LinearLayout
+                android:id="@+id/buttonPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/Spinner"
+                    android:layout_width="158dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp" />
+
+                <Button
+                    android:id="@+id/RerollButton"
+                    style="@style/SmallButton"
+                    android:layout_width="match_parent"
+                    android:text="@string/rerollButtonDefault" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

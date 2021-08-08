@@ -1,5 +1,6 @@
 package se.lth.solid.vilmer.thirtygame
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -8,13 +9,14 @@ import android.widget.ArrayAdapter
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.lth.solid.vilmer.thirtygame.databinding.FragmentGameBinding
-import android.view.Menu
+import androidx.core.view.children
+import java.io.FileNotFoundException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 
 class GameFragment : Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
@@ -26,22 +28,27 @@ class GameFragment : Fragment() {
     private var option = "Low"
     private val TAG = "GameFragment"
 
+    private var colorOn: Int = 0
+    private var colorOff: Int = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        load()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dataBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_game,
-            container, false
-        )
-        buttons = addToggleButtons()
-        setButtons(gameViewModel.getValues())
-        dataBinding.RerollButton.setOnClickListener {
-            onRollButton()
-        }
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
+        colorOn = ContextCompat.getColor(requireContext(), R.color.green)
+        colorOff = ContextCompat.getColor(requireContext(), R.color.purple_700)
+
+        addToggleButtons()
+        dataBinding.RerollButton.setOnClickListener { onRollButton() }
 
         if (gameViewModel.choices.isEmpty()) {
-            gameViewModel.resetGame()
+            resetGame()
         }
 
         setRollButtonState(gameViewModel.getNumberRerolls())
@@ -52,7 +59,6 @@ class GameFragment : Fragment() {
             android.R.layout.simple_spinner_item,
             gameViewModel.choices
         )
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -65,10 +71,31 @@ class GameFragment : Fragment() {
                 option = parent.getItemAtPosition(position).toString()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        dataBinding.topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.reset_game -> {
+                    resetGame()
+                    true
+                }
+                R.id.high_scores -> {
+                    findNavController().navigate(R.id.action_gameFragment_to_highScoresFragment)
+                    true
+                }
+                else -> false
             }
         }
+
         return dataBinding.root
+    }
+
+    private fun resetGame() {
+        gameViewModel.resetGame()
+        setButtons()
+        adapter.clear()
+        adapter.addAll(gameViewModel.choices)
     }
 
     /**
@@ -85,7 +112,7 @@ class GameFragment : Fragment() {
             // else the score is evaluated and a new set is started
 
             gameViewModel.evaluateAndNewSet(option)
-            adapter.notifyDataSetChanged()
+            adapter.remove(option)
 
             // if the game is finished the score screen is shown
             if (gameViewModel.choices.isEmpty()) {
@@ -95,7 +122,7 @@ class GameFragment : Fragment() {
                 dataBinding.Spinner.setSelection(0)
             }
         }
-        setButtons(gameViewModel.getValues())
+        setButtons()
         setRollButtonState(numberRerolls + 1)
     }
 
@@ -116,29 +143,17 @@ class GameFragment : Fragment() {
     /**
      * Helper function for adding the buttons
      */
-    private fun addToggleButtons(): MutableList<ToggleButton> {
-        val buttons = mutableListOf<ToggleButton>()
-        buttons.add(dataBinding.ToggleButton1)
-        buttons.add(dataBinding.ToggleButton2)
-        buttons.add(dataBinding.ToggleButton3)
-        buttons.add(dataBinding.ToggleButton4)
-        buttons.add(dataBinding.ToggleButton5)
-        buttons.add(dataBinding.ToggleButton6)
-        for (b in buttons) {
-            b.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    b.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
-                } else {
-                    b.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.purple_700
-                        )
-                    )
-                }
+    private fun addToggleButtons() {
+        buttons = mutableListOf()
+        val gridLayout = dataBinding.grid
+        gridLayout.children.forEach {
+            val button = it as ToggleButton
+            button.setOnCheckedChangeListener { _, isChecked ->
+                button.setBackgroundColor(if (isChecked) colorOn else colorOff)
             }
+            buttons.add(button)
         }
-        return buttons
+        setButtons()
     }
 
     /**
@@ -151,37 +166,48 @@ class GameFragment : Fragment() {
         return clicked
     }
 
-    private fun setButtons(values: IntArray) {
+    private fun setButtons() {
         Log.d(TAG, "in setButtons")
-        for (i in values.indices) {
-            buttons[i].textOn = "" + values[i]
-            buttons[i].textOff = "" + values[i]
-            buttons[i].isChecked = false
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.reset_game -> {
-                gameViewModel.resetGame()
-                true
-            }
-            R.id.high_scores -> {
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        gameViewModel.getValues().forEachIndexed {index: Int, v: Int ->
+            buttons[index].textOn = "" + v
+            buttons[index].textOff = "" + v
+            buttons[index].isChecked = false
         }
     }
 
     private fun save() {
-
+        try {
+            val oos = ObjectOutputStream(
+                requireContext().openFileOutput(
+                    SAVE_FILE_NAME, Context.MODE_PRIVATE
+                )
+            )
+            oos.reset()
+            oos.writeObject(gameViewModel.highScores)
+            oos.flush()
+            oos.close()
+        } catch (e: FileNotFoundException) {
+            print(e.stackTrace)
+        }
     }
 
     private fun load() {
+        try {
+            val ois = ObjectInputStream(requireContext().openFileInput(SAVE_FILE_NAME))
+            gameViewModel.highScores = ois.readObject() as ArrayList<Score>
+            ois.close()
+        } catch (e: FileNotFoundException) {
+            gameViewModel.highScores = arrayListOf()
+            save()
+        }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        save()
+    }
+
+    companion object {
+        const val SAVE_FILE_NAME = "highScores.sr1"
     }
 }

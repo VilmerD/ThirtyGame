@@ -47,9 +47,15 @@ class ResultsFragment : Fragment() {
         dataBinding.textViewScores.text = arrayToStackedString(scores)
         dataBinding.textViewChoices.text = choicesToString(choices)
         dataBinding.textViewSets.text = arrayToStackedString(IntArray(scores.size) { it + 1 })
-        dataBinding.textViewTotalScore.text = ("" + scores.sum())
+
+        val tot = scores.sum()
+        val highScores = gameViewModel.highScores
+        highScores.add(Score(tot))
+        dataBinding.textViewTotalScore.text = ("" + tot)
 
         dataBinding.newGameButton.setOnClickListener {
+            val name = dataBinding.nameTextInputLayout.editText?.text.toString()
+            if (name != "") highScores[highScores.lastIndex].name = name
             gameViewModel.resetGame()
             activity?.onBackPressed()
         }

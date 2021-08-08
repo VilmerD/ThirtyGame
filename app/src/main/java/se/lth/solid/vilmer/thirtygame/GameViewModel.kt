@@ -9,6 +9,8 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     var choices: MutableList<String>
     private val TAG = "GameViewModel"
 
+    var highScores: ArrayList<Score> = arrayListOf()
+
     init {
         game = if (handle.contains("game")) {
             handle.get<GameModel>("game")!!

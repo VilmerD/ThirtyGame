@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_gameFragment_to_resultsFragment"
             app:destination="@id/resultsFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_highScoresFragment"
+            app:destination="@id/highScoresFragment" />
     </fragment>
     <fragment
         android:id="@+id/resultsFragment"
         android:name="se.lth.solid.vilmer.thirtygame.ResultsFragment"
         android:label="ResultsFragment"
         tools:layout="@layout/fragment_results"/>
+    <fragment
+        android:id="@+id/highScoresFragment"
+        android:name="se.lth.solid.vilmer.thirtygame.HighScoresFragment"
+        android:label="HighScoresFragment"
+        tools:layout="@layout/fragment_high_scores"/>
 </navigation>
